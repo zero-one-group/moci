@@ -1,0 +1,69 @@
+{
+    "name": "moci",
+    "version": "0.0.3",
+    "description": "ZOG's Monorepo Command-line Interface",
+    "license": "MIT",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zero-one-group/moci.git"
+    },
+    "bugs": {
+        "url": "https://github.com/zero-one-group/moci/issues"
+    },
+    "homepage": "https://oss.zero-one-group.com",
+    "exports": {
+        ".": "./dist/index.mjs",
+        "./cli": "./bin/moci.mjs"
+    },
+    "bin": {
+        "moci": "./bin/moci.mjs"
+    },
+    "main": "./bin/moci.mjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": ["bin", "dist"],
+    "scripts": {
+        "build": "unbuild",
+        "build:stub": "unbuild --stub",
+        "dev:prepare": "unbuild --stub",
+        "dev": "pnpm build &>/dev/null && pnpm -s moci",
+        "check": "biome check . --write",
+        "format": "biome format . --write",
+        "lint": "biome lint . --write",
+        "prepack": "pnpm --silent run build",
+        "pre-commit": "lefthook run pre-commit --force",
+        "postinstall": "lefthook install || true",
+        "moci": "node ./bin/moci.mjs",
+        "release": "pnpm publish",
+        "release:dry": "pnpm publish --no-git-checks --dry-run",
+        "update-deps": "npm-check-updates --configFileName .ncurc.json",
+        "cleanup": "pnpm run --stream --parallel --color \"/cleanup:(?!deps)/\"",
+        "cleanup:dev": "pnpm dlx rimraf .{build,data,tmp} build dist",
+        "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules",
+        "typecheck": "tsc -b --noEmit"
+    },
+    "dependencies": {
+        "citty": "^0.1.6",
+        "consola": "^3.4.2",
+        "giget": "^2.0.0",
+        "make-dir": "^5.0.0",
+        "memorable-ids": "^0.2.0",
+        "node-jq": "^6.0.1"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
+        "@types/node": "^24.0.13",
+        "lefthook": "^1.12.1",
+        "npm-check-updates": "^18.0.1",
+        "typescript": "^5.8.3",
+        "unbuild": "^3.5.0",
+        "unplugin-purge-polyfills": "^0.1.0"
+    },
+    "publishConfig": {
+        "executableFiles": ["./bin/moci.mjs"],
+        "access": "public"
+    },
+    "keywords": ["moci", "cli", "command-line", "utilities", "monorepo"],
+    "packageManager": "pnpm@10.13.1"
+}
