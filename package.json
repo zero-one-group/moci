@@ -22,10 +22,7 @@
     "main": "./bin/moci.mjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
-    "files": [
-        "bin",
-        "dist"
-    ],
+    "files": ["bin", "dist"],
     "scripts": {
         "build": "unbuild",
         "build:stub": "unbuild --stub",
@@ -65,17 +62,9 @@
         "unplugin-purge-polyfills": "^0.1.0"
     },
     "publishConfig": {
-        "executableFiles": [
-            "./bin/moci.mjs"
-        ],
+        "executableFiles": ["./bin/moci.mjs"],
         "access": "public"
     },
-    "keywords": [
-        "moci",
-        "cli",
-        "command-line",
-        "utilities",
-        "monorepo"
-    ],
+    "keywords": ["moci", "cli", "command-line", "utilities", "monorepo"],
     "packageManager": "pnpm@10.13.1"
 }
