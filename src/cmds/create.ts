@@ -74,7 +74,7 @@ export default defineCommand({
     // Exit early if dry run
     if (args.dryRun) return
 
-    const outputDir = join(String(BASE_PATH), args.name)
+    const outputDir = IS_DEV ? join(String(BASE_PATH), args.name) : join(args.name)
     const degitJsonPath = join(outputDir, 'degit.json')
     const packageJsonPath = join(outputDir, 'package.json')
 
