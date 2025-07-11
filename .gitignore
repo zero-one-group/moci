@@ -40,6 +40,7 @@ _data/
 build/
 dist/
 /generated
+/my-project
 /temp
 /tmp
 

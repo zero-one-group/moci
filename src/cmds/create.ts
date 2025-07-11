@@ -6,10 +6,9 @@ import { consola } from 'consola'
 import { downloadTemplate } from 'giget'
 import { makeDirectory } from 'make-dir'
 import jq from 'node-jq'
-import { isDevelopment, isProduction, isTest } from 'std-env'
 import type { DegitTypes } from '../types'
 
-const IS_DEV = isDevelopment || isTest || !isProduction
+const IS_DEV = process.env.NODE_ENV === 'DEV'
 const BASE_PATH = IS_DEV ? join(process.cwd(), 'generated') : undefined
 
 export default defineCommand({

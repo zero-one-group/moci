@@ -1,6 +1,6 @@
 {
     "name": "moci",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "ZOG's Monorepo Command-line Interface",
     "license": "MIT",
     "type": "module",
@@ -27,7 +27,7 @@
         "build": "unbuild",
         "build:stub": "unbuild --stub",
         "dev:prepare": "unbuild --stub",
-        "dev": "pnpm build &>/dev/null && pnpm -s moci",
+        "dev": "pnpm build &>/dev/null && NODE_ENV=DEV pnpm -s moci",
         "check": "biome check . --write",
         "format": "biome format . --write",
         "lint": "biome lint . --write",
@@ -49,8 +49,7 @@
         "giget": "^2.0.0",
         "make-dir": "^5.0.0",
         "memorable-ids": "^0.2.0",
-        "node-jq": "^6.0.1",
-        "std-env": "^3.9.0"
+        "node-jq": "^6.0.1"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
