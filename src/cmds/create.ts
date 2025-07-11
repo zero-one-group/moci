@@ -164,6 +164,9 @@ export default defineCommand({
       if (dryRun) {
         consola.info('Dry run mode - no changes will be made')
         consola.info(`Would create new monorepo project: ${name}`)
+        if (install) {
+          consola.info('Would install dependencies after project creation')
+        }
         return
       }
 
@@ -177,42 +180,52 @@ export default defineCommand({
         process.exit(1)
       }
 
-      // Handle force warning and confirmation
-      if (force && !noConfirm) {
-        if (directoryExists) {
-          consola.warn(`⚠️  Directory '${outputDir}' already exists!`)
-          consola.warn('⚠️  Force mode is enabled - this will overwrite existing files!')
-        } else {
-          consola.warn('⚠️  Force mode is enabled')
-        }
-
-        const forceConfirmed = await consola.prompt(
-          'Are you sure you want to proceed with force overwrite?',
-          {
-            type: 'confirm',
-          }
-        )
-
-        if (!forceConfirmed) {
-          consola.info('Force operation cancelled')
-          process.exit(0)
-        }
-      }
-
-      // Skip confirmation if noConfirm mode is enabled
+      // Single confirmation for project creation (handles both force and regular creation)
       if (!noConfirm) {
-        const projectMessage =
-          directoryExists && force
-            ? `Overwrite existing directory and create new monorepo project with name "${name}"?`
-            : `Create new monorepo project with name "${name}"?`
+        let confirmationMessage: string
+        let warningShown = false
 
-        const confirmed = await consola.prompt(projectMessage, {
+        if (directoryExists && force) {
+          consola.warn(`⚠️  Directory '${outputDir}' already exists and will be overwritten!`)
+          confirmationMessage = `Create new monorepo project "${name}" and overwrite existing directory?`
+          warningShown = true
+        } else if (force && !warningShown) {
+          consola.warn('⚠️  Force mode is enabled')
+          confirmationMessage = `Create new monorepo project "${name}"?`
+        } else {
+          confirmationMessage = `Create new monorepo project "${name}"?`
+        }
+
+        const confirmed = await consola.prompt(confirmationMessage, {
           type: 'confirm',
         })
 
         if (!confirmed) {
           consola.info('Monorepo project creation cancelled')
           process.exit(0)
+        }
+      }
+
+      // Handle dependency installation confirmation
+      let shouldInstall = install
+
+      // If install flag is not provided and noConfirm is false, ask user
+      if (!install && !noConfirm) {
+        shouldInstall = await consola.prompt(
+          'Do you want to install dependencies after creating the project?',
+          {
+            type: 'confirm',
+            initial: false,
+          }
+        )
+      }
+
+      // Show installation info if verbose mode is enabled
+      if (verbose) {
+        if (shouldInstall) {
+          consola.info('Dependencies will be installed after project creation')
+        } else {
+          consola.info('Dependencies will not be installed automatically')
         }
       }
 
@@ -228,18 +241,31 @@ export default defineCommand({
 
       const templateUrl = `github:zero-one-group/monorepo`
       const { source, dir } = await downloadTemplate(templateUrl, {
+        dir: name,
         cwd: BASE_PATH,
         forceClean: force,
         silent: noConfirm,
-        dir: name,
-        install,
+        install: shouldInstall,
         force,
       })
 
       if (verbose) {
         consola.success(`Project '${name}' has been created at ${dir}`)
+        if (shouldInstall) {
+          consola.info('Dependencies installation completed')
+        }
       } else {
         consola.success(`Project '${name}' has been created from ${source}`)
+        if (shouldInstall) {
+          consola.success('Dependencies have been installed')
+        }
+      }
+
+      // Show next steps if dependencies were not installed
+      if (!shouldInstall) {
+        consola.log('\nNext steps:')
+        consola.log(`  cd ${name}`)
+        consola.log('  pnpm install\n')
       }
     } catch (error) {
       if (!noConfirm) {
