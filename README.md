@@ -1,7 +1,5 @@
 # ZOG's Monorepo Command-line Interface
 
-[![Contribution](https://badgen.net/badge/icon/Contributions%20Welcome?icon=bitcoin-lightning&label&color=black&labelColor=black)][contribution]
-
 Zero One Group's (ZOG) Unified Monorepo Command-Line Interface (CLI) serves
 as your all-in-one toolkit for streamlined, scalable development. Designed
 from the ground up with monorepo best practices in mind, this CLI puts complete
@@ -48,6 +46,10 @@ This project is open-sourced software licensed under the [MIT license][license-m
 
 Copyrights in this project are retained by their contributors.
 See the [license file](./LICENSE) for more information.
+
+---
+
+[![Contribution](https://badgen.net/badge/icon/Contributions%20Welcome?icon=bitcoin-lightning&label&color=black&labelColor=black)][contribution]
 
 <!-- link reference definition -->
 [biome]: https://biomejs.dev
