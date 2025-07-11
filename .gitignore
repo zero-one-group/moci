@@ -39,6 +39,7 @@ _data/
 .wrangler
 build/
 dist/
+/generated
 /temp
 /tmp
 

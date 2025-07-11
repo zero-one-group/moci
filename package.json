@@ -22,7 +22,10 @@
     "main": "./bin/moci.mjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
-    "files": ["bin", "dist"],
+    "files": [
+        "bin",
+        "dist"
+    ],
     "scripts": {
         "build": "unbuild",
         "build:stub": "unbuild --stub",
@@ -49,7 +52,8 @@
         "giget": "^2.0.0",
         "make-dir": "^5.0.0",
         "memorable-ids": "^0.2.0",
-        "node-jq": "^6.0.1"
+        "node-jq": "^6.0.1",
+        "std-env": "^3.9.0"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -61,9 +65,17 @@
         "unplugin-purge-polyfills": "^0.1.0"
     },
     "publishConfig": {
-        "executableFiles": ["./bin/moci.mjs"],
+        "executableFiles": [
+            "./bin/moci.mjs"
+        ],
         "access": "public"
     },
-    "keywords": ["moci", "cli", "command-line", "utilities", "monorepo"],
+    "keywords": [
+        "moci",
+        "cli",
+        "command-line",
+        "utilities",
+        "monorepo"
+    ],
     "packageManager": "pnpm@10.13.1"
 }
