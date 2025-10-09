@@ -1,6 +1,6 @@
 {
     "name": "moci",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "ZOG's Monorepo Command-line Interface",
     "license": "MIT",
     "type": "module",
@@ -11,7 +11,7 @@
     "bugs": {
         "url": "https://github.com/zero-one-group/moci/issues"
     },
-    "homepage": "https://oss.zero-one-group.com",
+    "homepage": "https://oss.zero-one-group.com/monorepo",
     "exports": {
         ".": "./dist/index.mjs",
         "./cli": "./bin/moci.mjs"
