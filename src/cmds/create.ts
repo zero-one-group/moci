@@ -19,7 +19,7 @@ export default defineCommand({
       type: 'positional',
       description: `Project name (lowercase, kebab-case)`,
       valueHint: 'my-project',
-      required: true,
+      required: false,
     },
     force: {
       type: 'boolean',
@@ -153,8 +153,34 @@ export default defineCommand({
   },
   async run(context) {
     const { args } = context
-    // Get variables from the args
-    const { name, force, noConfirm, dryRun, install, verbose } = args
+    let { name, force, noConfirm, dryRun, install, verbose } = args
+
+    // Prompt for project name if not provided
+    if (!name) {
+      name = await consola.prompt(
+        'What would you like to name your project? (use kebab-case, e.g. my-project)',
+        {
+          type: 'text',
+          validate: (input: string) => {
+            const kebabCaseRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/
+            if (!kebabCaseRegex.test(input)) {
+              return 'Project name must be kebab-case (lowercase, numbers, and hyphens only, e.g. "my-project")'
+            }
+            return true
+          },
+        }
+      )
+      args.name = name // update args for downstream usage
+    }
+
+    // Validate the project name format, must be kebab-case
+    const kebabCaseRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/
+    if (!kebabCaseRegex.test(name)) {
+      consola.error(
+        `Project name "${name}" is invalid. Please use kebab-case (lowercase, numbers, and hyphens only, e.g. "my-project").`
+      )
+      process.exit(1)
+    }
 
     try {
       // Early exit for dry run
@@ -232,6 +258,32 @@ export default defineCommand({
 
       // Cleanup after template download and before install dependencies
       await (this.cleanup?.(context) ?? Promise.resolve())
+
+      // Replace "myorg" placeholder with the actual project name in all files
+      const replaceInFiles = async (dir: string, search: string, replace: string) => {
+        const entries = fs.readdirSync(dir, { withFileTypes: true })
+        for (const entry of entries) {
+          const fullPath = join(dir, entry.name)
+          if (entry.isDirectory()) {
+            await replaceInFiles(fullPath, search, replace)
+          } else if (entry.isFile()) {
+            // Only process text files (skip binaries)
+            const buffer = fs.readFileSync(fullPath)
+            // Simple check: skip if file contains null bytes (likely binary)
+            if (buffer.includes(0)) continue
+            const content = buffer.toString('utf8')
+            if (content.includes(search)) {
+              const replaced = content.split(search).join(replace)
+              fs.writeFileSync(fullPath, replaced, 'utf8')
+              if (args.verbose) {
+                consola.success(`Replaced "${search}" with "${replace}" in ${fullPath}`)
+              }
+            }
+          }
+        }
+      }
+
+      await replaceInFiles(dir, 'myorg', args.name)
 
       // Run pnpm install if --install is set or user confirms
       let shouldInstall = install
