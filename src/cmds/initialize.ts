@@ -11,8 +11,8 @@ const BASE_PATH = IS_DEV ? join(process.cwd(), 'generated') : undefined
 
 export default defineCommand({
   meta: {
-    name: 'create',
-    description: 'Create a new Monorepo application',
+    name: 'init',
+    description: 'Initialize a new Monorepo application',
   },
   args: {
     name: {
@@ -29,7 +29,7 @@ export default defineCommand({
     },
     install: {
       type: 'boolean',
-      description: 'Install dependencies after creating the application',
+      description: 'Install dependencies after initializing the application',
       default: false,
       alias: 'i',
     },
@@ -41,7 +41,7 @@ export default defineCommand({
     },
     dryRun: {
       type: 'boolean',
-      description: 'Dry run the command without creating anything',
+      description: 'Dry run the command without initializing anything',
     },
     verbose: {
       type: 'boolean',
