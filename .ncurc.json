@@ -8,5 +8,5 @@
     "silent": false,
     "install": "always",
     "packageManager": "pnpm",
-    "reject": ["@biomejs/biome"]
+    "reject": []
 }

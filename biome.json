@@ -1,13 +1,21 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-    "organizeImports": {
-        "enabled": true
-    },
+    "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
     "vcs": {
         "enabled": true,
         "clientKind": "git",
         "useIgnoreFile": true,
         "defaultBranch": "main"
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": ["**", "!.github/*", "!.output/*", "!public/*"]
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100
     },
     "linter": {
         "enabled": true,
@@ -15,7 +23,9 @@
             "recommended": true,
             "a11y": {
                 "noSvgWithoutTitle": "off",
-                "useKeyWithClickEvents": "off"
+                "useKeyWithClickEvents": "off",
+                "useSemanticElements": "off",
+                "useValidAnchor": "off"
             },
             "complexity": {
                 "noBannedTypes": "off",
@@ -24,14 +34,19 @@
             "correctness": {
                 "noUnusedImports": {
                     "level": "off",
-                    "fix": "none"
+                    "fix": "none",
+                    "options": {}
                 },
                 "noUnusedVariables": {
                     "level": "warn",
-                    "fix": "none"
+                    "fix": "none",
+                    "options": {
+                        "ignoreRestSiblings": true
+                    }
                 },
-                "useJsxKeyInIterable": "error",
-                "noUnknownFunction": "off"
+                "noChildrenProp": "off",
+                "noUnknownFunction": "off",
+                "useJsxKeyInIterable": "error"
             },
             "nursery": {
                 "useSortedClasses": {
@@ -39,7 +54,7 @@
                     "fix": "safe",
                     "options": {
                         "attributes": ["classList"],
-                        "functions": ["cn", "clx", "clsx", "cva", "tw"]
+                        "functions": ["clsx", "cn", "cx", "cva", "tv", "tw"]
                     }
                 }
             },
@@ -47,13 +62,30 @@
                 "noReExportAll": "off"
             },
             "security": {
-                "noDangerouslySetInnerHtmlWithChildren": "warn"
+                "noDangerouslySetInnerHtmlWithChildren": "warn",
+                "noDangerouslySetInnerHtml": "off"
             },
             "style": {
+                "noNonNullAssertion": "off",
+                "noParameterAssign": "warn",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
                 "noUnusedTemplateLiteral": "off",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error",
                 "useConsistentArrayType": "warn",
                 "useExportType": "warn",
-                "useImportType": "warn",
+                "useImportType": {
+                    "level": "off",
+                    "fix": "none",
+                    "options": {
+                        "style": "auto"
+                    }
+                },
                 "useFilenamingConvention": {
                     "level": "off",
                     "options": {
@@ -62,13 +94,9 @@
                 }
             },
             "suspicious": {
-                "noArrayIndexKey": "error",
+                "noArrayIndexKey": "warn",
                 "noAssignInExpressions": "off",
                 "noCommentText": "off",
-                "noConsoleLog": {
-                    "level": "info",
-                    "fix": "safe"
-                },
                 "noDebugger": "off",
                 "noExplicitAny": "off",
                 "noConsole": {
@@ -77,37 +105,20 @@
                     "options": {
                         "allow": [
                             "assert",
-                            "debug",
-                            "dir",
                             "error",
                             "info",
+                            "warn",
+                            "debug",
                             "time",
                             "timeEnd",
-                            "timeLog",
-                            "warn"
+                            "timeLog"
                         ]
                     }
                 },
                 "noDuplicateAtImportRules": "error",
+                "noUnknownAtRules": "off",
                 "noEmptyBlock": "warn"
             }
-        }
-    },
-    "formatter": {
-        "enabled": true,
-        "formatWithErrors": false,
-        "indentStyle": "space",
-        "indentWidth": 4,
-        "lineWidth": 100,
-        "ignore": []
-    },
-    "css": {
-        "parser": {
-            "allowWrongLineComments": false
-        },
-        "formatter": {
-            "enabled": true,
-            "quoteStyle": "double"
         }
     },
     "javascript": {
@@ -123,15 +134,40 @@
             "bracketSameLine": false
         }
     },
+    "css": {
+        "parser": {
+            "allowWrongLineComments": false
+        },
+        "formatter": {
+            "enabled": true,
+            "quoteStyle": "double"
+        }
+    },
     "json": {
         "formatter": {
             "indentWidth": 4,
             "trailingCommas": "none"
         }
     },
-    "files": {
-        "ignoreUnknown": true,
-        "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.css", "**/*.json"],
-        "ignore": [".github", ".output", "build", "dist", "public"]
-    }
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["**/server/**/*.ts"],
+            "linter": {
+                "enabled": true,
+                "rules": {
+                    "correctness": {
+                        "useHookAtTopLevel": "off"
+                    }
+                }
+            }
+        }
+    ]
 }

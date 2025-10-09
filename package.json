@@ -22,7 +22,16 @@
     "main": "./bin/moci.mjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
-    "files": ["bin", "dist"],
+    "files": [
+        "bin/**/*",
+        "dist/**/*",
+        "!tests/**/*",
+        "!dist/**/*.*.map",
+        "!tests/**/*.*.map",
+        "package.json",
+        "LICENSE",
+        "README.md"
+    ],
     "scripts": {
         "build": "unbuild",
         "build:stub": "unbuild --stub",
@@ -47,23 +56,31 @@
         "citty": "^0.1.6",
         "consola": "^3.4.2",
         "giget": "^2.0.0",
-        "make-dir": "^5.0.0",
+        "make-dir": "^5.1.0",
         "memorable-ids": "^0.2.0",
-        "node-jq": "^6.0.1"
+        "node-jq": "^6.3.1"
     },
     "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "@types/node": "^24.0.13",
-        "lefthook": "^1.12.1",
-        "npm-check-updates": "^18.0.1",
-        "typescript": "^5.8.3",
-        "unbuild": "^3.5.0",
+        "@biomejs/biome": "^2.2.5",
+        "@types/node": "^24.7.0",
+        "lefthook": "^1.13.6",
+        "npm-check-updates": "^19.0.0",
+        "typescript": "^5.9.3",
+        "unbuild": "^3.6.1",
         "unplugin-purge-polyfills": "^0.1.0"
     },
     "publishConfig": {
-        "executableFiles": ["./bin/moci.mjs"],
+        "executableFiles": [
+            "./bin/moci.mjs"
+        ],
         "access": "public"
     },
-    "keywords": ["moci", "cli", "command-line", "utilities", "monorepo"],
-    "packageManager": "pnpm@10.13.1"
+    "keywords": [
+        "moci",
+        "cli",
+        "command-line",
+        "utilities",
+        "monorepo"
+    ],
+    "packageManager": "pnpm@10.18.1"
 }
