@@ -151,7 +151,8 @@ export default defineCommand({
       throw error
     }
   },
-  async run({ args }) {
+  async run(context) {
+    const { args } = context
     // Get variables from the args
     const { name, force, noConfirm, dryRun, install, verbose } = args
 
@@ -202,29 +203,6 @@ export default defineCommand({
         }
       }
 
-      // Handle dependency installation confirmation
-      let shouldInstall = install
-
-      // If install flag is not provided and noConfirm is false, ask user
-      if (!install && !noConfirm) {
-        shouldInstall = await consola.prompt(
-          'Do you want to install dependencies after creating the project?',
-          {
-            type: 'confirm',
-            initial: false,
-          }
-        )
-      }
-
-      // Show installation info if verbose mode is enabled
-      if (verbose) {
-        if (shouldInstall) {
-          consola.info('Dependencies will be installed after project creation')
-        } else {
-          consola.info('Dependencies will not be installed automatically')
-        }
-      }
-
       // Handle force cleanup after confirmation
       if (force && directoryExists) {
         consola.info(`Cleaning up existing directory '${outputDir}'`)
@@ -235,30 +213,44 @@ export default defineCommand({
         }
       }
 
+      // Download the template first
       const templateUrl = `github:zero-one-group/monorepo`
       const { source, dir } = await downloadTemplate(templateUrl, {
         dir: name,
         cwd: BASE_PATH,
         forceClean: force,
         silent: noConfirm,
-        install: shouldInstall,
+        install: false,
         force,
       })
 
       if (verbose) {
         consola.success(`Project '${name}' has been created at ${dir}`)
-        if (shouldInstall) {
-          consola.info('Dependencies installation completed')
-        }
       } else {
         consola.success(`Project '${name}' has been created from ${source}`)
-        if (shouldInstall) {
-          consola.success('Dependencies have been installed')
-        }
       }
 
-      // Show next steps if dependencies were not installed
-      if (!shouldInstall) {
+      // Cleanup after template download and before install dependencies
+      await (this.cleanup?.(context) ?? Promise.resolve())
+
+      // Run pnpm install if --install is set or user confirms
+      let shouldInstall = install
+      if (!install && !noConfirm) {
+        shouldInstall = await consola.prompt(
+          'Do you want to install dependencies after creating the project?',
+          {
+            type: 'confirm',
+            initial: false,
+          }
+        )
+      }
+
+      if (shouldInstall) {
+        consola.info('Installing dependencies...')
+        const { execa } = await import('execa')
+        await execa('pnpm', ['install'], { cwd: dir, stdio: 'inherit' })
+        consola.success('Dependencies have been installed')
+      } else {
         consola.log('\nNext steps:')
         consola.log(`  cd ${name}`)
         consola.log('  pnpm install\n')
