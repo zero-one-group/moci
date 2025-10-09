@@ -1,11 +1,9 @@
 import fs from 'node:fs'
-import { readFile, rm } from 'node:fs/promises'
+import { mkdir, readFile, rm } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { defineCommand } from 'citty'
 import { consola } from 'consola'
 import { downloadTemplate } from 'giget'
-import { makeDirectory } from 'make-dir'
-import jq from 'node-jq'
 import type { DegitTypes } from '../types'
 
 const IS_DEV = process.env.NODE_ENV === 'DEV'
@@ -61,7 +59,7 @@ export default defineCommand({
     try {
       if (IS_DEV) {
         // Create BASE_PATH if not exists in development environment
-        await makeDirectory(resolve(String(BASE_PATH))).catch((err) => {
+        await mkdir(resolve(String(BASE_PATH)), { recursive: true, mode: 0o755 }).catch((err) => {
           throw new Error(`Failed to create target directory: ${err.message}`)
         })
       }
@@ -126,15 +124,14 @@ export default defineCommand({
         consola.info('No degit.json found, skipping cleanup actions')
       }
 
-      // Update package.json name field using node-jq
       if (fs.existsSync(packageJsonPath)) {
         consola.info(`Updating application name in package.json`)
 
         try {
-          const output = await jq.run(`.name = "${args.name}"`, packageJsonPath, { output: 'json' })
-
-          // Write the modified JSON back to the file
-          fs.writeFileSync(packageJsonPath, JSON.stringify(output, null, 2))
+          const pkgRaw = await readFile(packageJsonPath, 'utf-8')
+          const pkg = JSON.parse(pkgRaw)
+          pkg.name = args.name
+          fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2))
 
           if (args.verbose) {
             consola.success(`Updated package.json name to: ${args.name}`)
