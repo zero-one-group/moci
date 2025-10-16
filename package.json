@@ -1,6 +1,6 @@
 {
     "name": "moci",
-    "version": "0.1.7",
+    "version": "0.2.0",
     "description": "ZOG's Monorepo Command-line Interface",
     "license": "MIT",
     "type": "module",
@@ -56,15 +56,15 @@
     "dependencies": {
         "citty": "^0.1.6",
         "consola": "^3.4.2",
-        "execa": "^9.6.0",
         "giget": "^2.0.0",
-        "memorable-ids": "^0.2.0"
+        "memorable-ids": "^0.2.0",
+        "tinyexec": "^1.0.1"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.2.5",
-        "@types/node": "^24.7.0",
+        "@biomejs/biome": "^2.2.6",
+        "@types/node": "^24.7.2",
         "lefthook": "^1.13.6",
-        "npm-check-updates": "^19.0.0",
+        "npm-check-updates": "^19.1.1",
         "typescript": "^5.9.3",
         "unbuild": "^3.6.1",
         "unplugin-purge-polyfills": "^0.1.0"
@@ -82,5 +82,5 @@
         "utilities",
         "monorepo"
     ],
-    "packageManager": "pnpm@10.18.1"
+    "packageManager": "pnpm@10.18.3"
 }

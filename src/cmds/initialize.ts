@@ -299,8 +299,13 @@ export default defineCommand({
 
       if (shouldInstall) {
         consola.info('Installing dependencies...')
-        const { execa } = await import('execa')
-        await execa('pnpm', ['install'], { cwd: dir, stdio: 'inherit' })
+        const { exec } = await import('tinyexec')
+        await exec('pnpm', ['install'], {
+          nodeOptions: {
+            cwd: dir,
+            stdio: 'inherit',
+          },
+        })
         consola.success('Dependencies have been installed')
       } else {
         consola.log('\nNext steps:')
